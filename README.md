@@ -51,19 +51,19 @@ GeminiTelegramBot/
 
     Obtain a bot token from the BotFather on Telegram. Set this token as an environment variable named `TELEGRAM_BOT_TOKEN`.
 
-    *   **On Windows:**
+    - **On Windows:**
 
-        ```bash
-        $env:TELEGRAM_BOT_TOKEN="YOUR_BOT_TOKEN"
-        # Or permanently via System Properties > Environment Variables
-        ```
+      ```bash
+      $env:TELEGRAM_BOT_TOKEN="YOUR_BOT_TOKEN"
+      # Or permanently via System Properties > Environment Variables
+      ```
 
-    *   **On macOS/Linux:**
+    - **On macOS/Linux:**
 
-        ```bash
-        export TELEGRAM_BOT_TOKEN="YOUR_BOT_TOKEN"
-        # Add to your shell profile (.bashrc, .zshrc, etc.) for permanence
-        ```
+      ```bash
+      export TELEGRAM_BOT_TOKEN="YOUR_BOT_TOKEN"
+      # Add to your shell profile (.bashrc, .zshrc, etc.) for permanence
+      ```
 
 4.  **Run the bot:**
 
