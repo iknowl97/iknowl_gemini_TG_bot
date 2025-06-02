@@ -15,15 +15,15 @@ from aiogram.enums import ParseMode, ChatAction
 from aiogram.client.default import DefaultBotProperties
 
 # For language model API
-# import google.generativeai as genai
-# from google.generativeai.types import generation_types
+import google.generativeai as genai
+from google.generativeai.types import generation_types
 
 # For RAG
-# from langchain_community.document_loaders import CSVLoader
-# from langchain_community.vectorstores import Chroma
-# from langchain_community.embeddings import HuggingFaceEmbeddings
-# from langchain.chains import RetrievalQA
-# from langchain_community.llms import HuggingFaceHub
+from langchain_community.document_loaders import CSVLoader
+from langchain_community.vectorstores import Chroma
+from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain.chains import RetrievalQA
+from langchain_community.llms import HuggingFaceHub
 
 # Load environment variables from .env file
 load_dotenv()
@@ -108,8 +108,7 @@ async def cmd_start(message: Message):
     user_full_name = getattr(
         getattr(message, 'from_user', None), 'full_name', 'მომხმარებელი')
     await message.answer(
-        f"გამარჯობა, {user_full_name}!
-"
+        f"გამარჯობა, {user_full_name}!\n"
         "მე ვარ შენი ასისტენტი. 🤖\n"
         "შეგიძლია გამომიგზავნო ტექსტი, ხმოვანი შეტყობინება ან სურათი!\n"
         "ყველა პასუხი იქნება თანამედროვე, გამართული ქართულით."
@@ -195,7 +194,8 @@ async def handle_text_and_caption_message(message: Message, bot: Bot):
 
     except Exception as e:
         await processing_message.delete()
-        logging.error(f"Error in Retrieval chain processing: {e}", exc_info=True)
+        logging.error(
+            f"Error in Retrieval chain processing: {e}", exc_info=True)
         await message.answer("უკაცრავად, შეტყობინების დამუშავებისას მოხდა შეცდომა. 😵‍💫")
         log_conversation(message.from_user.id, getattr(
             message.from_user, 'username', ''), user_text, "შეცდომა Retrieval დამუშავებისას")
