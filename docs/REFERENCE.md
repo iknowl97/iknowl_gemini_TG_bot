@@ -46,7 +46,7 @@
 
 ## სასარგებლო ბმულები 👇
 
-- [Google AI Studio](https://aistudio.google.com/) ✨
+- [Google AI Studio](https://aistudio.google.com/) (წვდომა VPN-ის გარეშე: https://t.me/JumbleAI/53) ✨
 - [Hugging Face](https://huggingface.co/) 🤗
 - [Pipenv](https://pipenv.pypa.io/en/latest/) 📦
 - [aiogram დოკუმენტაცია](https://docs.aiogram.dev/en/latest/) 📖
@@ -54,3 +54,5 @@
 - [ChromaDB დოკუმენტაცია](https://docs.trychroma.com/) 📖
 - [Sentence Transformers](https://www.sbert.net/) 📖
 - [BotFather (Telegram)](https://core.telegram.org/bots#botfather) 🤖
+- [Python 3.13+](https://www.python.org/downloads/) 🐍
+- [Cursor AI](https://www.cursor.com/) ➡️
