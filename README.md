@@ -1,95 +1,65 @@
-# GeminiTelegramBot
+# GeminiTelegramBot: AI მხარდაჭერის ჩატბოტი Telegram-ისთვის ✨
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Python-3.13%2B-blue?logo=python" alt="Python">
-  <img src="https://img.shields.io/badge/Telegram-Bot-blue?logo=telegram" alt="Telegram">
-  <img src="https://img.shields.io/badge/Gemini%20API-Enabled-brightgreen" alt="Gemini API">
-  <img src="https://img.shields.io/badge/License-MIT-green" alt="License">
-</p>
+![GitHub last commit](https://img.shields.io/github/last-commit/iknowl97/GeminiTelegramBot) ![License](https://img.shields.io/badge/License-MIT-blue.svg) ![Python version](https://img.shields.io/badge/Python-3.9%2B-blue) ![Dependencies](https://img.shields.io/badge/dependencies-Pipenv-green)
 
----
+GeminiTelegramBot არის მძლავრი და მოქნილი Telegram ბოტი, რომელიც აერთიანებს უახლესი ხელოვნური ინტელექტის შესაძლებლობებს (`Google Gemini`, `Hugging Face`), რათა მომხმარებლებს შესთავაზოს ავტომატიზირებული და ჭკვიანი ინტერაქცია. 🤖 შექმნილია `aiogram` ბიბლიოთეკით, ბოტი იდეალურია როგორც პირადი პროექტებისთვის, ასევე კორპორატიული გადაწყვეტილებებისთვის.
 
-## 🤖 GeminiTelegramBot
-A modern, multimodal Telegram bot powered by Google Gemini AI. Supports text, voice, and image messages with intelligent, concise responses. Built for easy deployment and extensibility.
+## ძირითადი მახასიათებლები 🚀
 
----
+- **ტექსტური შეტყობინებები (RAG-ით):** ამუშავებს ტექსტს Retrieval-Augmented Generation (RAG) მეთოდოლოგიის გამოყენებით, საუბრების ისტორიიდან კონტექსტის ამოღებით (`user_conversations.csv`). იყენებს Hugging Face მოდელებს ინფორმირებული პასუხებისთვის. 📚
+- **ხმოვანი შეტყობინებები:** ახდენს ქართული ხმოვანი შეტყობინებების ტრანსკრიფციას (`OGG` ფორმატი), ამოწმებს სიზუსტეს და აგზავნის ტრანსკრიფციას კოდის ბლოკად. შემდეგ აანალიზებს და პასუხობს ტექსტურად. 🎤
+- **სურათების ანალიზი:** შეუძლია სურათების გაგება და მათზე დაფუძნებული პასუხების გენერირება Google Gemini-ის მეშვეობით. 🖼️
+- **მრავალენოვანი მხარდაჭერა:** ტექნიკური პრომპტები ინგლისურადაა, მაგრამ ბოტი მომხმარებელთან ურთიერთობს მაღალი ხარისხის ქართულად. 🗣️🇬🇪
+- **საუბრების აღრიცხვა:** ინახავს ყველა ინტერაქციას `user_conversations.csv` ფაილში RAG-ის ცოდნის ბაზისთვის. 📝
+- **მოქნილი კონფიგურაცია:** მარტივი კონფიგურაცია `.env` ფაილით. ⚙️
+- **ცენტრალიზებული პრომპტები:** AI პრომპტები და სტატიკური ტექსტები ინახება ცალკე Markdown ფაილებში (`prompts/`). 📄
 
-## ✨ Features
-- **Text, Voice, and Image Support**: Handles text, voice (transcription + reply), and image (description) messages.
-- **Gemini AI Integration**: Uses Google Gemini API for advanced, context-aware responses.
-- **Multimodal Prompts**: Custom system prompts for each message type.
-- **Robust Error Handling**: User-friendly feedback and detailed logging.
-- **Easy Setup**: Simple environment configuration and requirements.
-- **Extensible**: Modular codebase for future features.
+## კორპორატიული გამოყენება 🏢
 
----
+GeminiTelegramBot შეიძლება ეფექტურად იქნას გამოყენებული კომპანიებში AI-ზე დაფუძნებული მომხმარებელთა მხარდაჭერისთვის Telegram-ში. მისი RAG შესაძლებლობები საშუალებას იძლევა შექმნათ ცოდნის ბაზა კომპანიის მონაცემებზე დაყრდნობით, რათა ბოტმა გასცეს ზუსტი და კონტექსტზე მორგებული პასუხები.
 
-## 🚀 Quickstart
-```bash
-git clone <your-repo-url>
-cd GeminiTelegramBot
-python3 -m venv .venv
-# Activate your venv (see below)
-pip install -U -r requirements.txt
-cp .env.example .env  # Or create .env manually
-python bot.py
-```
+მეტი დეტალისთვის კორპორატიულ ინტეგრაციაზე, იხილეთ დეტალური დოკუმენტაცია `./docs` საქაღალდეში.
 
----
+## დაწყება ✨
 
-## 🛠️ Environment Variables
-Create a `.env` file in the project root:
-```env
-BOT_TOKEN="YOUR_TELEGRAM_BOT_TOKEN"
-GEMINI_API_KEY="YOUR_GEMINI_API_KEY"
-MODEL_NAME="gemini-2.5-flash-preview-05-20"
-```
+პროექტის დასაყენებლად და გასაშვებად, მიჰყევით ინსტრუქციებს:
 
----
+1.  **კლონირება:**
+    ```sh
+    git clone <თქვენი-საცავის-მისამართი>
+    cd GeminiTelegramBot
+    ```
+2.  **დამოკიდებულებები (Pipenv):**
+    ```sh
+    pip install --user pipenv # საჭიროების შემთხვევაში დააინსტალირეთ Pipenv
+    pipenv install
+    ```
+3.  **კონფიგურაცია:** შექმენით `.env` ფაილი პროექტის ძირეულ დირექტორიაში და შეიყვანეთ თქვენი API ტოკენები. იხილეთ [SETUP.md](docs/SETUP.md) დეტალებისთვის.
+    ```env
+    BOT_TOKEN="..."
+    GEMINI_API_KEY="..."
+    HUGGING_FACE_API_KEY="..."
+    # ... სხვა ცვლადები
+    ```
+4.  **გაშვება:**
+    ```sh
+    pipenv run python bot_geo_v1.py
+    ```
 
-## 🖼️ Architecture
-```mermaid
-flowchart TD
-    User[User] -->|Text/Voice/Image| Telegram[Telegram Bot]
-    Telegram -->|API| BotCore[GeminiTelegramBot]
-    BotCore -->|Prompt| Gemini[Gemini API]
-    Gemini -->|Response| BotCore
-    BotCore -->|Reply| User
-```
+დამატებითი ინფორმაციისთვის იხილეთ:
 
----
+- [QUICKSTART.md](docs/QUICKSTART.md) - სწრაფი დაწყება.
+- [SETUP.md](docs/SETUP.md) - სრული დაყენების გზამკვლევი.
+- [REFERENCE.md](docs/REFERENCE.md) - ბრძანებების და ფუნქციების ცნობარი.
 
-## 📦 Project Structure
-```
-GeminiTelegramBot/
-├── bot.py              # Main bot logic
-├── requirements.txt    # Python dependencies
-├── .env.example        # Example environment config
-├── memory-bank/        # Project documentation & context
-├── docs/               # Setup, quickstart, reference
-└── ...
-```
+## დამოკიდებულებები 📦
 
----
+პროექტი იყენებს [Pipenv](https://pipenv.pypa.io/en/latest/)-ს დამოკიდებულებების სამართავად. ყველა საჭირო ბიბლიოთეკა ჩამოთვლილია `Pipfile`-ში.
 
-## 💡 Usage
-- Start a chat with your bot on Telegram.
-- Send text, voice, or image messages.
-- Use `/start` and `/help` for guidance.
+## ავტორი 👤
 
----
+iknowl97
 
-## 🤝 Contributing
-1. Fork the repo and create your branch.
-2. Make your changes and add tests if needed.
-3. Submit a pull request!
+## ლიცენზია 📄
 
----
-
-## 👤 Author
-**iknowl97**
-
----
-
-## 📄 License
-MIT 
+[მიუთითეთ ლიცენზია, თუ არსებობს]
