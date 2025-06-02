@@ -18,20 +18,34 @@ from aiogram.client.default import DefaultBotProperties
 import google.generativeai as genai
 from google.generativeai.types import generation_types
 
+# For RAG
+from langchain_community.document_loaders import CSVLoader
+from langchain_community.vectorstores import Chroma
+from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain.chains import RetrievalQA
+from langchain_community.llms import HuggingFaceHub
+
 # Load environment variables from .env file
 load_dotenv()
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 MODEL_NAME = os.getenv("MODEL_NAME")
+HUGGING_FACE_API_KEY = os.getenv("HUGGING_FACE_API_KEY")
+HUGGING_FACE_MODEL = os.getenv("HUGGING_FACE_MODEL", "google/gemma-2b-it")
 
 # Check for required tokens
 if not BOT_TOKEN:
     raise ValueError("You must set the BOT_TOKEN environment variable.")
 if not GEMINI_API_KEY:
-    raise ValueError("You must set the GEMINI_API_KEY environment variable.")
+    logging.warning(
+        "GEMINI_API_KEY not set. Image/Audio/Document processing might be limited.")
 if not MODEL_NAME:
-    raise ValueError("You must set the MODEL_NAME environment variable.")
+    logging.warning(
+        "MODEL_NAME not set. Image/Audio/Document processing might be limited.")
+if not HUGGING_FACE_API_KEY:
+    raise ValueError(
+        "You must set the HUGGING_FACE_API_KEY environment variable for RAG.")
 
 # Load system prompts from markdown files
 PROMPT_DIR = pathlib.Path(__file__).parent / "prompts"
@@ -57,6 +71,31 @@ try:
 except Exception as e:
     logging.error(f"Gemini API configuration error: {e}")
     gemini_model = None
+
+# RAG Setup
+# Use a common embedding model
+embedding_model_name = "sentence-transformers/all-MiniLM-L6-v2"
+embeddings = HuggingFaceEmbeddings(model_name=embedding_model_name)
+
+# Initialize Chroma with persistence (optional, removes need to re-embed each time)
+# For simplicity, we'll use in-memory for now. Change to persistent later if needed.
+# db_directory = "./chroma_db"
+# vectorstore = Chroma(persist_directory=db_directory, embedding_function=embeddings)
+vectorstore = Chroma(embedding_function=embeddings)
+
+# Hugging Face LLM setup
+hf_llm = HuggingFaceHub(
+    repo_id=HUGGING_FACE_MODEL,
+    task="text-generation",
+    huggingfacehub_api_token=HUGGING_FACE_API_KEY,
+)
+
+# Create RetrievalQA chain (basic setup)
+qa_chain = RetrievalQA.from_chain_type(
+    llm=hf_llm,
+    chain_type="stuff",  # Stuffing all retrieved documents into the prompt
+    retriever=vectorstore.as_retriever()
+)
 
 router = Router()
 
@@ -130,37 +169,34 @@ async def handle_text_and_caption_message(message: Message, bot: Bot):
         log_conversation(message.from_user.id, getattr(
             message.from_user, 'username', ''), user_text, "ტექსტი არ არის")
         return
-    processing_message = await message.answer("ვაზროვნებ... 🤔")
+    processing_message = await message.answer("ვაზროვნებ... ��")
     try:
-        prompt_with_instruction = f"{TEXT_SYSTEM_PROMPT}\n\nUser message: {user_text}"
-        response = await gemini_model.generate_content_async(prompt_with_instruction)
+        # Use RAG chain to get response
+        # The qa_chain internally handles retrieval and generation
+        response = await qa_chain.invoke({"query": user_text})
+
         await processing_message.delete()
-        if response.text:
-            await message.answer(response.text)
+
+        # The response from RetrievalQA is a dictionary, the answer is in the 'result' key
+        if response and 'result' in response and response['result']:
+            bot_response_text = response['result']
+            await message.answer(bot_response_text)
             log_conversation(message.from_user.id, getattr(
-                message.from_user, 'username', ''), user_text, response.text)
+                message.from_user, 'username', ''), user_text, bot_response_text)
         else:
-            # Handle cases where the main AI response is empty
+            # Handle cases where RAG chain returns no result
             logging.warning(
-                f"Gemini API returned an empty response for text: {user_text}")
-            safety_feedback_info = ""
-            if hasattr(response, 'prompt_feedback') and response.prompt_feedback:
-                safety_feedback_info += f"\nReason (prompt_feedback): {response.prompt_feedback}"
-            if hasattr(response, 'candidates') and response.candidates:
-                for i, candidate in enumerate(response.candidates):
-                    if hasattr(candidate, 'finish_reason'):
-                        safety_feedback_info += f"\nCandidate {i} (finish_reason): {candidate.finish_reason}"
-                    if hasattr(candidate, 'safety_ratings'):
-                        safety_feedback_info += f"\nCandidate {i} (safety_ratings): {candidate.safety_ratings}"
-            logging.warning(safety_feedback_info)
-            await message.answer(f"სამწუხაროდ, ვერ შევძელი პასუხის გენერირება. 😔 თქვენი მოთხოვნა შეიძლება ძალიან რთული იყო ან არღვევდა წესებს.{safety_feedback_info if safety_feedback_info else ''}")
+                f"RAG chain returned no result for query: {user_text}")
+            await message.answer("სამწუხაროდ, ვერ შევძელი თქვენს შეკითხვაზე პასუხის გაცემა კონტექსტის გამოყენებით. 😔")
             log_conversation(message.from_user.id, getattr(
-                message.from_user, 'username', ''), user_text, "პასუხი ვერ გენერირდა")
+                message.from_user, 'username', ''), user_text, "RAG chain returned no result")
+
     except Exception as e:
         await processing_message.delete()
+        logging.error(f"Error in RAG chain processing: {e}", exc_info=True)
         await message.answer("უკაცრავად, შეტყობინების დამუშავებისას მოხდა შეცდომა. 😵‍💫")
         log_conversation(message.from_user.id, getattr(
-            message.from_user, 'username', ''), user_text, "შეცდომა ტექსტის დამუშავებისას")
+            message.from_user, 'username', ''), user_text, "შეცდომა RAG დამუშავებისას")
 
 # Enhanced image handler: supports photo and document with image MIME type
 
@@ -452,6 +488,33 @@ def log_conversation(user_id, username, message, response):
             response.replace("\n", " ") if response else ""
         ])
 
+# Function to load data from CSV and populate Chroma
+
+
+def load_conversations_to_chroma(file_path: pathlib.Path):
+    if not file_path.exists():
+        logging.warning(
+            f"Conversation log file not found at {file_path}. No data loaded to Chroma.")
+        return
+    try:
+        # Using CSVLoader from Langchain
+        loader = CSVLoader(file_path=str(file_path))
+        documents = loader.load()
+
+        if not documents:
+            logging.info("No documents loaded from conversation log.")
+            return
+
+        # Add documents to Chroma
+        # Note: This will re-add documents every time the bot starts if using in-memory Chroma.
+        # For persistent Chroma, you'd check if the collection exists and is populated.
+        vectorstore.add_documents(documents)
+        logging.info(
+            f"Loaded {len(documents)} documents into Chroma from {file_path}.")
+
+    except Exception as e:
+        logging.error(f"Error loading conversations to Chroma: {e}")
+
 
 async def main():
     default_properties = DefaultBotProperties(parse_mode=ParseMode.HTML)
@@ -459,6 +522,9 @@ async def main():
     dp = Dispatcher()
 
     dp.include_router(router)
+
+    # Load conversation data into Chroma on startup
+    load_conversations_to_chroma(LOG_FILE)
 
     await bot.delete_webhook(drop_pending_updates=True)
 

@@ -1,51 +1,76 @@
-# GeminiTelegramBot Setup Guide
+# GeminiTelegramBot: დაყენების გზამკვლევი
 
-## Prerequisites
-- Python 3.13+ ([Download Python](https://www.python.org/downloads/))
-- Telegram account and bot token ([BotFather](https://core.telegram.org/bots#botfather))
-- Gemini API key ([Google AI Studio](https://aistudio.google.com/prompts/new_chat))
+ეს გზამკვლევი დეტალურად აღწერს, თუ როგორ დააყენოთ და გაუშვათ GeminiTelegramBot თქვენს ლოკალურ გარემოში.
 
-## 1. Clone the Repository
+## წინაპირობები
+
+სანამ დაიწყებთ, დარწმუნდით, რომ გაქვთ შემდეგი:
+
+- **Python 3.13+:** პროექტი შემუშავებულია Python-ის უახლესი ვერსიებით. შეგიძლიათ ჩამოტვირთოთ [Python-ის ოფიციალური ვებ-გვერდიდან](https://www.python.org/downloads/).
+- **Telegram ანგარიში და ბოტის ტოკენი:** თქვენ დაგჭირდებათ Telegram ბოტის შექმნა [BotFather](https://core.telegram.org/bots#botfather)-ის მეშვეობით და მიღებული API ტოკენი.
+- **Google Gemini API კლავიში:** მიიღეთ API კლავიში [Google AI Studio](https://aistudio.google.com/). ეს საჭიროა სურათების და ხმოვანი შეტყობინებების დამუშავებისთვის.
+- **Hugging Face API კლავიში:** მიიღეთ API კლავიში [Hugging Face](https://huggingface.co/settings/tokens). ეს საჭიროა ტექსტური შეტყობინებებისთვის Retrieval-Augmented Generation (RAG) ფუნქციონალით.
+- **ინტერნეტ კავშირი:** დამოკიდებულებების ჩამოსატვირთად და AI სერვისებთან დასაკავშირებლად.
+
+## 1. საცავის კლონირება
+
+გახსენით ტერმინალი და კლონირეთ პროექტის საცავი:
+
 ```sh
-git clone <your-repo-url>
+git clone <თქვენი-საცავის-მისამართი>
 cd GeminiTelegramBot
 ```
 
-## 2. Create a Virtual Environment
+## 2. Pipenv-ის ინსტალაცია და დამოკიდებულებების დაყენება
+
+პროექტი იყენებს [Pipenv](https://pipenv.pypa.io/en/latest/)-ს დამოკიდებულებების და ვირტუალური გარემოს სამართავად. თუ Pipenv არ გაქვთ დაინსტალირებული, დააინსტალირეთ გლობალურად. **მნიშვნელოვანია:** ეს ბრძანება შეასრულეთ თქვენი არსებული ვირტუალური გარემოდან გამოსვლის შემდეგ.
+
 ```sh
-python3 -m venv .venv
+pip install --user pipenv
 ```
 
-### Activate the Virtual Environment
-- **macOS/Linux:**
-  ```sh
-  source .venv/bin/activate
-  ```
-- **Windows:**
-  ```sh
-  .venv\Scripts\activate
-  ```
+Pipenv-ის დაინსტალირების შემდეგ, გადადით პროექტის დირექტორიაში (თუ უკვე არ ხართ) და შეასრულეთ ბრძანება დამოკიდებულებების დასაყენებლად. Pipenv ავტომატურად შექმნის ვირტუალურ გარემოს ამ პროექტისთვის.
 
-## 3. Install Dependencies
 ```sh
-pip install -U -r requirements.txt
+pipenv install
 ```
 
-## 4. Configure Environment Variables
-Create a `.env` file in the project root with the following content:
+ეს ჩამოტვირთავს და დააინსტალირებს ყველა ბიბლიოთეკას, რომელიც მითითებულია `Pipfile`-ში, პროექტის სპეციფიკურ ვირტუალურ გარემოში.
+
+## 3. გარემოს ცვლადების კონფიგურაცია (`.env` ფაილი)
+
+პროექტის ძირეულ დირექტორიაში შექმენით ფაილი სახელად `.env` და დაამატეთ შემდეგი ხაზები. შეცვალეთ placeholder მნიშვნელობები თქვენი რეალური API ტოკენებითა და კლავიშებით.
 
 ```env
-BOT_TOKEN="YOUR_TELEGRAM_BOT_TOKEN"
-GEMINI_API_KEY="YOUR_GEMINI_API_KEY"
+BOT_TOKEN="თქვენი_TELEGRAM_BOT_TOKEN"
+GEMINI_API_KEY="თქვენი_GEMINI_API_KEY"
 MODEL_NAME="gemini-2.5-flash-preview-05-20"
+HUGGING_FACE_API_KEY="თქვენი_HUGGING_FACE_API_KEY"
+HUGGING_FACE_MODEL="google/gemma-2b-it"
 ```
 
-## 5. Run the Bot
+- **`BOT_TOKEN`:** თქვენი Telegram ბოტის ტოკენი.
+- **`GEMINI_API_KEY`:** თქვენი Google Gemini API კლავიში.
+- **`MODEL_NAME`:** Google Gemini მოდელის სახელი.
+- **`HUGGING_FACE_API_KEY`:** თქვენი Hugging Face API კლავიში.
+- **`HUGGING_FACE_MODEL`:** Hugging Face მოდელის ID ტექსტის გენერაციისთვის (შეგიძლიათ შეცვალოთ).
+
+## 4. ბოტის გაშვება
+
+ბოტის გასაშვებად გამოიყენეთ Pipenv-ის `run` ბრძანება. ეს უზრუნველყოფს, რომ ბოტი გაეშვება სწორ ვირტუალურ გარემოში:
+
 ```sh
-python bot.py
+pipenv run python bot_geo_v1.py
 ```
 
-## Useful Links
-- [Google AI Studio](https://aistudio.google.com/prompts/new_chat)
-- [Cursor AI](https://www.cursor.com/)
-- [Jumble GPT Telegram Bot](http://t.me/JumbleGPT_bot) 
+ბოტი ახლა უნდა მუშაობდეს და მზად იყოს Telegram-ში შეტყობინებების მისაღებად.
+
+## 5. საუბრის ისტორიის ჩატვირთვა (სურვილისამებრ)
+
+თუ გაქვთ უკვე არსებული საუბრების ისტორია `user_conversations.csv` ფაილში და გსურთ, რომ ბოტმა გამოიყენოს ის RAG-ისთვის გაშვებისას, მოათავსეთ ეს ფაილი იმავე დირექტორიაში, სადაც `bot_geo_v1.py` მდებარეობს. ბოტი ავტომატურად შეეცდება მის ჩატვირთვას სტარტაპის დროს.
+
+## დამატებითი ინფორმაცია
+
+- **ცნობარი:** იხილეთ [REFERENCE.md](REFERENCE.md) ბრძანებების, მხარდაჭერილი ტიპების და სხვა დეტალებისთვის.
+- **სწრაფი დაწყება:** მოკლე ინსტრუქციებისთვის იხილეთ [QUICKSTART.md](QUICKSTART.md).
+- **ინსტრუქციები:** დამატებითი ინსტრუქციები და შენიშვნები იხილეთ [Instructions.md](Instructions.md).
