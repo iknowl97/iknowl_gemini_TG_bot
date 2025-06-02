@@ -1,65 +1,92 @@
-# GeminiTelegramBot: AI მხარდაჭერის ჩატბოტი Telegram-ისთვის ✨
+# Gemini Telegram Bot (Georgian Language v1.1)
 
-![GitHub last commit](https://img.shields.io/github/last-commit/iknowl97/GeminiTelegramBot) ![License](https://img.shields.io/badge/License-MIT-blue.svg) ![Python version](https://img.shields.io/badge/Python-3.9%2B-blue) ![Dependencies](https://img.shields.io/badge/dependencies-Pipenv-green)
+This project is a Telegram bot developed in Python, designed to communicate in the Georgian language. It utilizes the Telegram Bot API to interact with users and is intended to be powered by a language model capable of generating literate and modern Georgian text.
 
-GeminiTelegramBot არის მძლავრი და მოქნილი Telegram ბოტი, რომელიც აერთიანებს უახლესი ხელოვნური ინტელექტის შესაძლებლობებს (`Google Gemini`, `Hugging Face`), რათა მომხმარებლებს შესთავაზოს ავტომატიზირებული და ჭკვიანი ინტერაქცია. 🤖 შექმნილია `aiogram` ბიბლიოთეკით, ბოტი იდეალურია როგორც პირადი პროექტებისთვის, ასევე კორპორატიული გადაწყვეტილებებისთვის.
+## Features
 
-## ძირითადი მახასიათებლები 🚀
+- Responds to the `/start` command with a welcome message in Georgian.
+- Provides information about the bot via the `/help` command in Georgian.
+- Includes a basic handler for text messages (AI integration placeholder).
+- Configured to use a system prompt in English optimized for generating high-quality Georgian output from an integrated AI model.
 
-- **ტექსტური შეტყობინებები (RAG-ით):** ამუშავებს ტექსტს Retrieval-Augmented Generation (RAG) მეთოდოლოგიის გამოყენებით, საუბრების ისტორიიდან კონტექსტის ამოღებით (`user_conversations.csv`). იყენებს Hugging Face მოდელებს ინფორმირებული პასუხებისთვის. 📚
-- **ხმოვანი შეტყობინებები:** ახდენს ქართული ხმოვანი შეტყობინებების ტრანსკრიფციას (`OGG` ფორმატი), ამოწმებს სიზუსტეს და აგზავნის ტრანსკრიფციას კოდის ბლოკად. შემდეგ აანალიზებს და პასუხობს ტექსტურად. 🎤
-- **სურათების ანალიზი:** შეუძლია სურათების გაგება და მათზე დაფუძნებული პასუხების გენერირება Google Gemini-ის მეშვეობით. 🖼️
-- **მრავალენოვანი მხარდაჭერა:** ტექნიკური პრომპტები ინგლისურადაა, მაგრამ ბოტი მომხმარებელთან ურთიერთობს მაღალი ხარისხის ქართულად. 🗣️🇬🇪
-- **საუბრების აღრიცხვა:** ინახავს ყველა ინტერაქციას `user_conversations.csv` ფაილში RAG-ის ცოდნის ბაზისთვის. 📝
-- **მოქნილი კონფიგურაცია:** მარტივი კონფიგურაცია `.env` ფაილით. ⚙️
-- **ცენტრალიზებული პრომპტები:** AI პრომპტები და სტატიკური ტექსტები ინახება ცალკე Markdown ფაილებში (`prompts/`). 📄
+## Project Structure
 
-## კორპორატიული გამოყენება 🏢
+```
+GeminiTelegramBot/
+├── .gitignore         # Specifies intentionally untracked files
+├── bot.py             # Original bot implementation (reference)
+├── bot_geo_v1.py      # Georgian language bot implementation (v1.1)
+├── requirements.txt   # Project dependencies
+├── README.md          # Project description and setup guide (this file)
+├── memory-bank/       # Bot's memory and context storage
+│   ├── activeContext.md
+│   ├── featureMap.md
+│   ├── georgian-prompts/ # Intended directory for Georgian prompts (currently not used for prompts)
+│   ├── progress.md
+│   ├── projectbrief.md
+│   ├── productContext.md
+│   ├── systemPatterns.md
+│   └── techContext.md
+└── .cursorrules       # Cursor's learned project patterns and intelligence
+```
 
-GeminiTelegramBot შეიძლება ეფექტურად იქნას გამოყენებული კომპანიებში AI-ზე დაფუძნებული მომხმარებელთა მხარდაჭერისთვის Telegram-ში. მისი RAG შესაძლებლობები საშუალებას იძლევა შექმნათ ცოდნის ბაზა კომპანიის მონაცემებზე დაყრდნობით, რათა ბოტმა გასცეს ზუსტი და კონტექსტზე მორგებული პასუხები.
+## Setup and Installation
 
-მეტი დეტალისთვის კორპორატიულ ინტეგრაციაზე, იხილეთ დეტალური დოკუმენტაცია `./docs` საქაღალდეში.
+1.  **Clone the repository:**
 
-## დაწყება ✨
-
-პროექტის დასაყენებლად და გასაშვებად, მიჰყევით ინსტრუქციებს:
-
-1.  **კლონირება:**
-    ```sh
-    git clone <თქვენი-საცავის-მისამართი>
+    ```bash
+    git clone <repository_url>
     cd GeminiTelegramBot
     ```
-2.  **დამოკიდებულებები (Pipenv):**
-    ```sh
-    pip install --user pipenv # საჭიროების შემთხვევაში დააინსტალირეთ Pipenv
-    pipenv install
-    ```
-3.  **კონფიგურაცია:** შექმენით `.env` ფაილი პროექტის ძირეულ დირექტორიაში და შეიყვანეთ თქვენი API ტოკენები. იხილეთ [SETUP.md](docs/SETUP.md) დეტალებისთვის.
-    ```env
-    BOT_TOKEN="..."
-    GEMINI_API_KEY="..."
-    HUGGING_FACE_API_KEY="..."
-    # ... სხვა ცვლადები
-    ```
-4.  **გაშვება:**
-    ```sh
-    pipenv run python bot_geo_v1.py
+
+2.  **Install dependencies:**
+
+    Make sure you have Python installed. Then install the required libraries using pip:
+
+    ```bash
+    pip install -r requirements.txt
     ```
 
-დამატებითი ინფორმაციისთვის იხილეთ:
+3.  **Set up your Telegram Bot Token:**
 
-- [QUICKSTART.md](docs/QUICKSTART.md) - სწრაფი დაწყება.
-- [SETUP.md](docs/SETUP.md) - სრული დაყენების გზამკვლევი.
-- [REFERENCE.md](docs/REFERENCE.md) - ბრძანებების და ფუნქციების ცნობარი.
+    Obtain a bot token from the BotFather on Telegram. Set this token as an environment variable named `TELEGRAM_BOT_TOKEN`.
 
-## დამოკიდებულებები 📦
+    *   **On Windows:**
 
-პროექტი იყენებს [Pipenv](https://pipenv.pypa.io/en/latest/)-ს დამოკიდებულებების სამართავად. ყველა საჭირო ბიბლიოთეკა ჩამოთვლილია `Pipfile`-ში.
+        ```bash
+        $env:TELEGRAM_BOT_TOKEN="YOUR_BOT_TOKEN"
+        # Or permanently via System Properties > Environment Variables
+        ```
 
-## ავტორი 👤
+    *   **On macOS/Linux:**
 
-iknowl97
+        ```bash
+        export TELEGRAM_BOT_TOKEN="YOUR_BOT_TOKEN"
+        # Add to your shell profile (.bashrc, .zshrc, etc.) for permanence
+        ```
 
-## ლიცენზია 📄
+4.  **Run the bot:**
 
-[მიუთითეთ ლიცენზია, თუ არსებობს]
+    Execute the Python script:
+
+    ```bash
+    python bot_geo_v1.py
+    ```
+
+## AI Integration
+
+Note that `bot_geo_v1.py` currently contains a placeholder for AI model integration. To make the bot functional beyond basic commands, you need to integrate a language model (like Gemini, GPT, etc.) capable of processing and generating Georgian text. Modify the `handle_message` function to call your chosen AI model's API.
+
+The `SYSTEM_PROMPT_GEO` variable contains an English prompt designed to guide your AI model to produce high-quality, literate, and modern Georgian output. Ensure your AI integration utilizes this or a similar prompt effectively.
+
+## Memory Bank
+
+The `memory-bank/` directory contains documentation files used by the Cursor AI assistant to understand the project context, progress, and technical details. These files are not strictly necessary for running the bot but are crucial for collaborative development with Cursor.
+
+## Contributing
+
+Include instructions on how others can contribute to your project.
+
+## License
+
+Specify your project's license.
