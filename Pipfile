@@ -1,0 +1,18 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+aiogram = "*"
+python-dotenv = "*"
+google-generativeai = "*"
+langchain = "*"
+chromadb = "*"
+transformers = "*"
+sentence-transformers = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.13"
