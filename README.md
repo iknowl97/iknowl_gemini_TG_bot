@@ -1,92 +1,92 @@
-# Gemini Telegram Bot (Georgian Language v1.1)
+# 🇬🇪✨ Gemini Telegram Bot: ქართული ვერსია (v1.1) ✨🇬🇪
 
-This project is a Telegram bot developed in Python, designed to communicate in the Georgian language. It utilizes the Telegram Bot API to interact with users and is intended to be powered by a language model capable of generating literate and modern Georgian text.
+👋 მოგესალმებით! ეს არის Telegram ბოტი, რომელიც სპეციალურად შეიქმნა ქართულ ენაზე კომუნიკაციისთვის. ის იყენებს Telegram Bot API-ს მომხმარებლებთან ურთიერთობისთვის და დაპროექტებულია ისე, რომ იმუშაოს ნებისმიერ ენის მოდელთან, რომელსაც შეუძლია გამართული, თანამედროვე ქართული ტექსტის გენერირება.
 
-## Features
+## 🚀 მახასიათებლები
 
-- Responds to the `/start` command with a welcome message in Georgian.
-- Provides information about the bot via the `/help` command in Georgian.
-- Includes a basic handler for text messages (AI integration placeholder).
-- Configured to use a system prompt in English optimized for generating high-quality Georgian output from an integrated AI model.
+- ✅ **`/start` ბრძანება:** გესალმებათ მისასალმებელი შეტყობინებით ქართულად.
+- ❓ **`/help` ბრძანება:** გაწვდით ინფორმაციას ბოტის შესახებ ქართულ ენაზე.
+- 💬 **ტექსტური შეტყობინებების დამუშავება:** მოიცავს ძირითად ფუნქციონალს ტექსტური შეტყობინებებისთვის (AI ინტეგრაციის ადგილი).
+- ⚙️ **ოპტიმიზებული პრომპტები:** იყენებს ინგლისურ სისტემურ პრომპტს, რომელიც შემუშავებულია მაღალი ხარისხის ქართული პასუხების მისაღებად ინტეგრირებული AI მოდელიდან.
 
-## Project Structure
+## 📂 პროექტის სტრუქტურა
 
 ```
 GeminiTelegramBot/
-├── .gitignore         # Specifies intentionally untracked files
-├── bot.py             # Original bot implementation (reference)
-├── bot_geo_v1.py      # Georgian language bot implementation (v1.1)
-├── requirements.txt   # Project dependencies
-├── README.md          # Project description and setup guide (this file)
-├── memory-bank/       # Bot's memory and context storage
+├── .gitignore         # იგნორირებული ფაილები
+├── bot.py             # ძველი ბოტის კოდი (საცნობარო)
+├── bot_geo_v1.py      # ქართული ბოტის კოდი (v1.1)
+├── requirements.txt   # საჭირო ბიბლიოთეკები
+├── README.md          # პროექტის აღწერა და ინსტრუქციები (ეს ფაილი)
+├── memory-bank/       # ბოტის მეხსიერება და კონტექსტი (Cursor AI-სთვის)
 │   ├── activeContext.md
 │   ├── featureMap.md
-│   ├── georgian-prompts/ # Intended directory for Georgian prompts (currently not used for prompts)
+│   ├── georgian-prompts/ # პრომპტებისთვის განკუთვნილი საქაღალდე (ამჟამად არ გამოიყენება)
 │   ├── progress.md
 │   ├── projectbrief.md
 │   ├── productContext.md
 │   ├── systemPatterns.md
 │   └── techContext.md
-└── .cursorrules       # Cursor's learned project patterns and intelligence
+└── .cursorrules       # Cursor AI-ს მიერ ნასწავლი პროექტის თავისებურებები
 ```
 
-## Setup and Installation
+## 🛠️ დაყენება და გაშვება
 
-1.  **Clone the repository:**
+1.  **რეპოზიტორის კლონირება:**
 
     ```bash
     git clone <repository_url>
     cd GeminiTelegramBot
     ```
 
-2.  **Install dependencies:**
+2.  **დამოკიდებულებებების ინსტალაცია:**
 
-    Make sure you have Python installed. Then install the required libraries using pip:
+    დარწმუნდით, რომ დაინსტალირებული გაქვთ Python. შემდეგ დააინსტალირეთ საჭირო ბიბლიოთეკები pip-ის გამოყენებით:
 
     ```bash
     pip install -r requirements.txt
     ```
 
-3.  **Set up your Telegram Bot Token:**
+3.  **Telegram ბოტის ტოკენის დაყენება:**
 
-    Obtain a bot token from the BotFather on Telegram. Set this token as an environment variable named `TELEGRAM_BOT_TOKEN`.
+    აიღეთ ბოტის ტოკენი BotFather-ისგან Telegram-ში. დააყენეთ ეს ტოკენი როგორც გარემოს ცვლადი (`environment variable`) სახელით `TELEGRAM_BOT_TOKEN`.
 
-    - **On Windows:**
+    - 🖥️ **Windows-ზე:**
 
       ```bash
       $env:TELEGRAM_BOT_TOKEN="YOUR_BOT_TOKEN"
-      # Or permanently via System Properties > Environment Variables
+      # ან მუდმივად: System Properties > Environment Variables
       ```
 
-    - **On macOS/Linux:**
+    - 🍎🐧 **macOS/Linux-ზე:**
 
       ```bash
       export TELEGRAM_BOT_TOKEN="YOUR_BOT_TOKEN"
-      # Add to your shell profile (.bashrc, .zshrc, etc.) for permanence
+      # დაამატეთ თქვენს shell პროფილს (.bashrc, .zshrc, და ა.შ.) მუდმივობისთვის
       ```
 
-4.  **Run the bot:**
+4.  **ბოტის გაშვება:**
 
-    Execute the Python script:
+    გაუშვით Python სკრიპტი:
 
     ```bash
     python bot_geo_v1.py
     ```
 
-## AI Integration
+## 🧠 AI ინტეგრაცია
 
-Note that `bot_geo_v1.py` currently contains a placeholder for AI model integration. To make the bot functional beyond basic commands, you need to integrate a language model (like Gemini, GPT, etc.) capable of processing and generating Georgian text. Modify the `handle_message` function to call your chosen AI model's API.
+გაითვალისწინეთ, რომ `bot_geo_v1.py` ამჟამად შეიცავს მხოლოდ ადგილს AI მოდელის ინტეგრაციისთვის. იმისათვის, რომ ბოტმა იმუშაოს ძირითადი ბრძანებების მიღმა, საჭიროა ენის მოდელის (მაგ. Gemini, GPT, და ა.შ.) ინტეგრირება, რომელსაც შეუძლია ქართული ტექსტის დამუშავება და გენერირება. შეცვალეთ `handle_message` ფუნქცია, რათა გამოიძახოს თქვენი არჩეული AI მოდელის API.
 
-The `SYSTEM_PROMPT_GEO` variable contains an English prompt designed to guide your AI model to produce high-quality, literate, and modern Georgian output. Ensure your AI integration utilizes this or a similar prompt effectively.
+`SYSTEM_PROMPT_GEO` ცვლადი შეიცავს ინგლისურ პრომპტს, რომელიც შექმნილია თქვენი AI მოდელის დასახმარებლად მაღალი ხარისხის, გამართული და თანამედროვე ქართული გამოსავლის მისაღებად. დარწმუნდით, რომ თქვენი AI ინტეგრაცია ეფექტურად იყენებს ამ ან მსგავს პრომპტს.
 
-## Memory Bank
+## 📖 Memory Bank (მეხსიერების ბანკი)
 
-The `memory-bank/` directory contains documentation files used by the Cursor AI assistant to understand the project context, progress, and technical details. These files are not strictly necessary for running the bot but are crucial for collaborative development with Cursor.
+`memory-bank/` საქაღალდე შეიცავს დოკუმენტაციის ფაილებს, რომლებსაც იყენებს Cursor AI ასისტენტი პროექტის კონტექსტის, მიმდინარეობის და ტექნიკური დეტალების გასაგებად. ეს ფაილები აუცილებელი არ არის ბოტის გასაშვებად, მაგრამ მნიშვნელოვანია Cursor-თან ერთად მუშაობისთვის.
 
-## Contributing
+## 🙌 როგორ შევიტანოთ წვლილი
 
-Include instructions on how others can contribute to your project.
+აქ დაამატეთ ინსტრუქციები, თუ როგორ შეუძლიათ სხვებს წვლილის შეტანა თქვენს პროექტში.
 
-## License
+## 📄 ლიცენზია
 
-Specify your project's license.
+მიუთითეთ თქვენი პროექტის ლიცენზია.
