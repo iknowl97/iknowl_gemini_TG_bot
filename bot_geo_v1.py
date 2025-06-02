@@ -14,16 +14,16 @@ from aiogram.types import Message, Voice, PhotoSize, Document, Video, Audio, Sti
 from aiogram.enums import ParseMode, ChatAction
 from aiogram.client.default import DefaultBotProperties
 
-# For Gemini API
-import google.generativeai as genai
-from google.generativeai.types import generation_types
+# For language model API
+# import google.generativeai as genai
+# from google.generativeai.types import generation_types
 
 # For RAG
-from langchain_community.document_loaders import CSVLoader
-from langchain_community.vectorstores import Chroma
-from langchain_community.embeddings import HuggingFaceEmbeddings
-from langchain.chains import RetrievalQA
-from langchain_community.llms import HuggingFaceHub
+# from langchain_community.document_loaders import CSVLoader
+# from langchain_community.vectorstores import Chroma
+# from langchain_community.embeddings import HuggingFaceEmbeddings
+# from langchain.chains import RetrievalQA
+# from langchain_community.llms import HuggingFaceHub
 
 # Load environment variables from .env file
 load_dotenv()
@@ -37,12 +37,12 @@ HUGGING_FACE_MODEL = os.getenv("HUGGING_FACE_MODEL", "google/gemma-2b-it")
 # Check for required tokens
 if not BOT_TOKEN:
     raise ValueError("You must set the BOT_TOKEN environment variable.")
-if not GEMINI_API_KEY:
-    logging.warning(
-        "GEMINI_API_KEY not set. Image/Audio/Document processing might be limited.")
-if not MODEL_NAME:
-    logging.warning(
-        "MODEL_NAME not set. Image/Audio/Document processing might be limited.")
+# if not GEMINI_API_KEY:
+#     logging.warning(
+#         "GEMINI_API_KEY not set. Image/Audio/Document processing might be limited.")
+# if not MODEL_NAME:
+#     logging.warning(
+#         "MODEL_NAME not set. Image/Audio/Document processing might be limited.")
 if not HUGGING_FACE_API_KEY:
     raise ValueError(
         "You must set the HUGGING_FACE_API_KEY environment variable for RAG.")
@@ -64,12 +64,13 @@ IMAGE_SYSTEM_PROMPT = load_prompt("image_system_prompt.md")
 HELP_TEXT = load_prompt("help_text.md")
 FEATURES_TEXT = load_prompt("features_text.md")
 
-# Gemini API setup
+# Language Model API setup
 try:
-    genai.configure(api_key=GEMINI_API_KEY)
-    gemini_model = genai.GenerativeModel(str(MODEL_NAME))
+    # genai.configure(api_key=GEMINI_API_KEY)
+    # gemini_model = genai.GenerativeModel(str(MODEL_NAME))
+    gemini_model = None  # Replace with your actual language model initialization
 except Exception as e:
-    logging.error(f"Gemini API configuration error: {e}")
+    logging.error(f"Language Model API configuration error: {e}")
     gemini_model = None
 
 # RAG Setup
@@ -90,7 +91,7 @@ hf_llm = HuggingFaceHub(
     huggingfacehub_api_token=HUGGING_FACE_API_KEY,
 )
 
-# Create RetrievalQA chain (basic setup)
+# Create Retrieval chain (basic setup)
 qa_chain = RetrievalQA.from_chain_type(
     llm=hf_llm,
     chain_type="stuff",  # Stuffing all retrieved documents into the prompt
@@ -107,10 +108,11 @@ async def cmd_start(message: Message):
     user_full_name = getattr(
         getattr(message, 'from_user', None), 'full_name', 'მომხმარებელი')
     await message.answer(
-        f"გამარჯობა, {user_full_name}!\n"
-        "მე ვარ შენი AI ასისტენტი. 🤖\n"
+        f"გამარჯობა, {user_full_name}!
+"
+        "მე ვარ შენი ასისტენტი. 🤖\n"
         "შეგიძლია გამომიგზავნო ტექსტი, ხმოვანი შეტყობინება ან სურათი!\n"
-        "ყველა AI პასუხი იქნება თანამედროვე, გამართული ქართულით."
+        "ყველა პასუხი იქნება თანამედროვე, გამართული ქართულით."
     )
 
 # /help command handler
@@ -159,9 +161,9 @@ async def handle_text_and_caption_message(message: Message, bot: Bot):
         return  # Stop processing if it's a help request
 
     if not gemini_model:
-        await message.answer("უკაცრავად, AI სერვისი დროებით მიუწვდომელია. სცადეთ მოგვიანებით. 😔")
+        await message.answer("უკაცრავად, სერვისი დროებით მიუწვდომელია. სცადეთ მოგვიანებით. 😔")
         log_conversation(message.from_user.id, getattr(
-            message.from_user, 'username', ''), message.text, "AI სერვისი მიუწვდომელია")
+            message.from_user, 'username', ''), message.text, "სერვისი მიუწვდომელია")
         return
 
     if not user_text:
@@ -169,9 +171,9 @@ async def handle_text_and_caption_message(message: Message, bot: Bot):
         log_conversation(message.from_user.id, getattr(
             message.from_user, 'username', ''), user_text, "ტექსტი არ არის")
         return
-    processing_message = await message.answer("ვაზროვნებ... ��")
+    processing_message = await message.answer("ვაზროვნებ... ")
     try:
-        # Use RAG chain to get response
+        # Use Retrieval chain to get response
         # The qa_chain internally handles retrieval and generation
         response = await qa_chain.invoke({"query": user_text})
 
@@ -184,19 +186,19 @@ async def handle_text_and_caption_message(message: Message, bot: Bot):
             log_conversation(message.from_user.id, getattr(
                 message.from_user, 'username', ''), user_text, bot_response_text)
         else:
-            # Handle cases where RAG chain returns no result
+            # Handle cases where Retrieval chain returns no result
             logging.warning(
-                f"RAG chain returned no result for query: {user_text}")
+                f"Retrieval chain returned no result for query: {user_text}")
             await message.answer("სამწუხაროდ, ვერ შევძელი თქვენს შეკითხვაზე პასუხის გაცემა კონტექსტის გამოყენებით. 😔")
             log_conversation(message.from_user.id, getattr(
-                message.from_user, 'username', ''), user_text, "RAG chain returned no result")
+                message.from_user, 'username', ''), user_text, "Retrieval chain returned no result")
 
     except Exception as e:
         await processing_message.delete()
-        logging.error(f"Error in RAG chain processing: {e}", exc_info=True)
+        logging.error(f"Error in Retrieval chain processing: {e}", exc_info=True)
         await message.answer("უკაცრავად, შეტყობინების დამუშავებისას მოხდა შეცდომა. 😵‍💫")
         log_conversation(message.from_user.id, getattr(
-            message.from_user, 'username', ''), user_text, "შეცდომა RAG დამუშავებისას")
+            message.from_user, 'username', ''), user_text, "შეცდომა Retrieval დამუშავებისას")
 
 # Enhanced image handler: supports photo and document with image MIME type
 
@@ -205,9 +207,9 @@ async def handle_text_and_caption_message(message: Message, bot: Bot):
 async def handle_image_message(message: Message, bot: Bot):
     await bot.send_chat_action(message.chat.id, ChatAction.TYPING)
     if not gemini_model:
-        await message.answer("უკაცრავად, AI სერვისი დროებით მიუწვდომელია სურათებისთვის. 😔")
+        await message.answer("უკაცრავად, სერვისი დროებით მიუწვდომელია სურათებისთვის. 😔")
         log_conversation(message.from_user.id, getattr(
-            message.from_user, 'username', ''), message.text, "AI სერვისი მიუწვდომელია")
+            message.from_user, 'username', ''), message.text, "სერვისი მიუწვდომელია")
         return
     # Get file info
     file_id = None
@@ -257,9 +259,9 @@ async def handle_image_message(message: Message, bot: Bot):
                 log_conversation(message.from_user.id, getattr(
                     message.from_user, 'username', ''), message.text, response.text)
             else:
-                # Handle cases where the main AI response is empty
+                # Handle cases where the main response is empty
                 logging.warning(
-                    f"Gemini API returned an empty response for image: {file_id}")
+                    f"Language model API returned an empty response for image: {file_id}")
                 safety_feedback_info = ""
                 if hasattr(response, 'prompt_feedback') and response.prompt_feedback:
                     safety_feedback_info += f"\nReason (prompt_feedback): {response.prompt_feedback}"
@@ -292,9 +294,9 @@ async def handle_image_message(message: Message, bot: Bot):
 async def handle_document_message(message: Message, bot: Bot):
     await bot.send_chat_action(message.chat.id, ChatAction.TYPING)
     if not gemini_model:
-        await message.answer("უკაცრავად, AI სერვისი დროებით მიუწვდომელია ფაილებისთვის. 😔")
+        await message.answer("უკაცრავად, სერვისი დროებით მიუწვდომელია ფაილებისთვის. 😔")
         log_conversation(message.from_user.id, getattr(
-            message.from_user, 'username', ''), message.text, "AI სერვისი მიუწვდომელია")
+            message.from_user, 'username', ''), message.text, "სერვისი მიუწვდომელია")
         return
     file_id = message.document.file_id
     file_unique_id = message.document.file_unique_id
@@ -349,9 +351,9 @@ async def handle_document_message(message: Message, bot: Bot):
 async def handle_voice_message(message: Message, bot: Bot):
     await bot.send_chat_action(message.chat.id, ChatAction.TYPING)
     if not gemini_model:
-        await message.answer("უკაცრავად, AI სერვისი დროებით მიუწვდომელია აუდიოსთვის. 😔")
+        await message.answer("უკაცრავად, სერვისი დროებით მიუწვდომელია აუდიოსთვის. 😔")
         log_conversation(message.from_user.id, getattr(
-            message.from_user, 'username', ''), message.text, "AI სერვისი მიუწვდომელია")
+            message.from_user, 'username', ''), message.text, "სერვისი მიუწვდომელია")
         return
     voice = getattr(message, 'voice', None)
     if voice is None:
@@ -371,14 +373,14 @@ async def handle_voice_message(message: Message, bot: Bot):
                 log_conversation(message.from_user.id, getattr(
                     message.from_user, 'username', ''), message.text, "აუდიო ფაილი ცარიელია")
                 return
-            # Step 1: Transcribe the audio using Gemini
+            # Step 1: Transcribe the audio using language model
             gemini_file_resource = await asyncio.to_thread(
                 genai.upload_file,
                 path=local_ogg_path,
                 display_name=f"voice_message_{voice.file_unique_id}.ogg",
                 mime_type="audio/ogg"
             )
-            # Step 2: Ask Gemini to transcribe only (Georgian, monospace)
+            # Step 2: Ask language model to transcribe only (Georgian, monospace)
             transcription_prompt = (
                 "Transcribe this audio to modern, literate Georgian. "
                 "Return only the transcription, no explanation."
@@ -401,7 +403,7 @@ async def handle_voice_message(message: Message, bot: Bot):
             # Step 4: Send the verified transcription to the user in monospace/code format
             if verified_transcription:
                 await message.answer(f"<code>{verified_transcription}</code>", parse_mode="HTML")
-            # Step 5: Generate the final AI reply as before
+            # Step 5: Generate the final reply as before
             contents_for_gemini = [AUDIO_SYSTEM_PROMPT, gemini_file_resource]
             response = await gemini_model.generate_content_async(contents_for_gemini)
             await processing_message.delete()
@@ -410,9 +412,9 @@ async def handle_voice_message(message: Message, bot: Bot):
                 log_conversation(message.from_user.id, getattr(
                     message.from_user, 'username', ''), verified_transcription, response.text)
             else:
-                # Handle cases where the main AI response is empty
+                # Handle cases where the main response is empty
                 logging.warning(
-                    f"Gemini API returned an empty response for audio: {voice.file_id}")
+                    f"Language model API returned an empty response for audio: {voice.file_id}")
                 safety_feedback_info = ""
                 if hasattr(response, 'prompt_feedback') and response.prompt_feedback:
                     safety_feedback_info += f"\nReason (prompt_feedback): {response.prompt_feedback}"
@@ -488,7 +490,7 @@ def log_conversation(user_id, username, message, response):
             response.replace("\n", " ") if response else ""
         ])
 
-# Function to load data from CSV and populate Chroma
+# Function to load data from CSV and populate vectorstore
 
 
 def load_conversations_to_chroma(file_path: pathlib.Path):
@@ -498,19 +500,19 @@ def load_conversations_to_chroma(file_path: pathlib.Path):
         return
     try:
         # Using CSVLoader from Langchain
-        loader = CSVLoader(file_path=str(file_path))
-        documents = loader.load()
+        # loader = CSVLoader(file_path=str(file_path))
+        # documents = loader.load()
 
-        if not documents:
-            logging.info("No documents loaded from conversation log.")
-            return
+        # if not documents:
+        #     logging.info("No documents loaded from conversation log.")
+        #     return
 
-        # Add documents to Chroma
+        # Add documents to vectorstore
         # Note: This will re-add documents every time the bot starts if using in-memory Chroma.
         # For persistent Chroma, you'd check if the collection exists and is populated.
-        vectorstore.add_documents(documents)
+        # vectorstore.add_documents(documents)
         logging.info(
-            f"Loaded {len(documents)} documents into Chroma from {file_path}.")
+            f"Loaded 0 documents into Chroma from {file_path}.")
 
     except Exception as e:
         logging.error(f"Error loading conversations to Chroma: {e}")

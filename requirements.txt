@@ -1,6 +1,5 @@
 aiogram
 python-dotenv
-google-generativeai
 langchain
 chromadb
 transformers

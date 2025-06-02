@@ -55,4 +55,14 @@
 - [Sentence Transformers](https://www.sbert.net/) 📖
 - [BotFather (Telegram)](https://core.telegram.org/bots#botfather) 🤖
 - [Python 3.13+](https://www.python.org/downloads/) 🐍
-- [Cursor AI](https://www.cursor.com/) ➡️
+
+# REFERENCES
+
+This document provides a list of references and resources used in the Gemini Telegram Bot project.
+
+- [Telegram Bot API Documentation](https://core.telegram.org/bots/api) ➡️ Essential guide for interacting with the Telegram Bot API.
+- [python-telegram-bot Library](https://python-telegram-bot.readthedocs.io/en/stable/) ➡️ The Python library used to simplify interaction with the Telegram Bot API.
+- [Hugging Face Transformers](https://huggingface.co/docs/transformers/index) ➡️ Library for various natural language processing tasks, including embeddings and models for RAG.
+- [LangChain](https://python.langchain.com/docs/get_started/introduction) ➡️ Framework for developing applications powered by language models.
+- [Chroma](https://www.trychroma.com/) ➡️ Open-source embeddings database used for RAG.
+- [dotenv](https://github.com/theskumar/python-dotenv) ➡️ For loading environment variables from a .env file.
